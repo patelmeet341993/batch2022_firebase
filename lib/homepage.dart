@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseproj/firestore_home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -10,47 +11,40 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
-  bool isLogin=false;
-  String name="",email="",photo="";
-
+  bool isLogin = false;
+  String name = "", email = "", photo = "";
 
   Future<void> getLogOut() async {
     try {
       await GoogleSignIn().signOut();
       await FirebaseAuth.instance.signOut();
-      isLogin=false;
+      isLogin = false;
       setState(() {});
     } catch (e) {}
   }
 
-  Future<void> checkLogin()async{
+  Future<void> checkLogin() async {
+    isLogin = FirebaseAuth.instance.currentUser != null;
 
+    if (FirebaseAuth.instance.currentUser == null) {
+      print("no user found");
+    } else {
+      print("user found");
 
-    isLogin=FirebaseAuth.instance.currentUser!=null;
+      User? user = FirebaseAuth.instance.currentUser;
 
-    if(FirebaseAuth.instance.currentUser==null)
-      {
-        print("no user found");
-      }
-    else
-      {
-        print("user found");
+      if (user != null) {
+        print(
+            "email : ${user.email} :  ${user.displayName} : ${user.photoURL}");
 
-      User? user=  FirebaseAuth.instance.currentUser;
-
-      if(user!=null)
-        {
-          print("email : ${user.email} :  ${user.displayName} : ${user.photoURL}");
-
-          photo=user.photoURL!;
-          email=user.email!;
-          name=user.displayName!;
-        }
+        photo = user.photoURL!;
+        email = user.email!;
+        name = user.displayName!;
       }
 
+     // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Firestore_homepage()));
 
+    }
   }
 
   Future<void> getLogin() async {
@@ -65,25 +59,26 @@ class _HomePageState extends State<HomePage> {
         print("Photo : ${account.photoUrl}");
         print("Email : ${account.email}");
 
-        photo=account.photoUrl!;
-        email=account.email;
-        name=account.displayName!;
+        photo = account.photoUrl!;
+        email = account.email;
+        name = account.displayName!;
 
-        GoogleSignInAuthentication auth=await account.authentication;
+        GoogleSignInAuthentication auth = await account.authentication;
 
-        AuthCredential credential=GoogleAuthProvider.credential(
-          accessToken: auth.accessToken,
-          idToken: auth.idToken
-        );
+        AuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: auth.accessToken, idToken: auth.idToken);
 
-        FirebaseAuth.instance.signInWithCredential(credential);
-        isLogin=true;
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        isLogin = true;
         setState(() {});
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Firestore_homepage()));
+
       }
     } catch (e) {
       print("Error : $e");
     }
   }
+
 
   @override
   void initState() {
