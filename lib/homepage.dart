@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseproj/firestore_home.dart';
+import 'package:firebaseproj/firestore_listen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -71,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         await FirebaseAuth.instance.signInWithCredential(credential);
         isLogin = true;
         setState(() {});
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Firestore_homepage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>FireStoreListen()));
 
       }
     } catch (e) {
