@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseproj/collectiionlist/document_list_home.dart';
 import 'package:firebaseproj/firestore_home.dart';
 import 'package:firebaseproj/firestore_listen.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         await FirebaseAuth.instance.signInWithCredential(credential);
         isLogin = true;
         setState(() {});
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>FireStoreListen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DocumentListhome()));
 
       }
     } catch (e) {
